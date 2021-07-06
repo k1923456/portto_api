@@ -1,0 +1,40 @@
+version: "3.5"
+
+services:
+  # apiService:
+  #   build:
+  #     context: ./apiService/
+  #     dockerfile: Dockerfile
+  #   working_dir: /serverHome
+  #   volumes:
+  #     - ./apiService:/serverHome
+  #   ports:
+  #     - "5000:5000"
+  #   depends_on:
+  #     - db
+  #   entrypoint: go run main.go
+  #   restart: always
+  # indexerService:
+  #     build:
+  #       context: ./indexerService
+  #       dockerfile: Dockerfile
+  #     working_dir: /serverHome
+  #     volumes:
+  #       - ./indexerService:/serverHome
+  #     ports:
+  #       - "5000:5000"
+  #     depends_on:
+  #       - db
+  #     entrypoint: go run main.go
+  #     restart: always
+  db:
+    image: postgres:12.4-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    # volumes:
+    #   - ./initSchema:/docker-entrypoint-initdb.d
+    restart: always
