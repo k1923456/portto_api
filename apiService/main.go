@@ -11,7 +11,7 @@ import (
 
 func connectDB() *gorm.DB {
 	// Connect to DB
-	dsn := "host=localhost user=user password=password dbname=user port=5432 sslmode=disable TimeZone=Asia/Taipei"
+	dsn := "host=portto_api_db_1 user=user password=password dbname=user port=5432 sslmode=disable TimeZone=Asia/Taipei"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		fmt.Println("failed to connect database")

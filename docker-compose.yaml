@@ -1,32 +1,30 @@
 version: "3.5"
 
 services:
-  # apiService:
-  #   build:
-  #     context: ./apiService/
-  #     dockerfile: Dockerfile
-  #   working_dir: /serverHome
-  #   volumes:
-  #     - ./apiService:/serverHome
-  #   ports:
-  #     - "5000:5000"
-  #   depends_on:
-  #     - db
-  #   entrypoint: go run main.go
-  #   restart: always
-  # indexerService:
-  #     build:
-  #       context: ./indexerService
-  #       dockerfile: Dockerfile
-  #     working_dir: /serverHome
-  #     volumes:
-  #       - ./indexerService:/serverHome
-  #     ports:
-  #       - "5000:5000"
-  #     depends_on:
-  #       - db
-  #     entrypoint: go run main.go
-  #     restart: always
+  api-service:
+    build:
+      context: ./apiService/
+      dockerfile: Dockerfile
+    working_dir: /serverHome
+    volumes:
+      - ./apiService:/serverHome
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    entrypoint: go run main.go
+    restart: always
+  indexer-service:
+      build:
+        context: ./indexerService
+        dockerfile: Dockerfile
+      working_dir: /serverHome
+      volumes:
+        - ./indexerService:/serverHome
+      depends_on:
+        - db
+      entrypoint: go run main.go
+      restart: always
   db:
     image: postgres:12.4-alpine
     ports:
