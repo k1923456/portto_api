@@ -3,7 +3,7 @@
 ### Usage
 ```
 docker-compose up -d
-curl http://localhost/blocks?limit=n
-curl http://localhost/blocks/:id
-curl http://localhost/transaction/:txHash
+curl http://localhost:3000/blocks\?limit=n
+curl http://localhost:3000/blocks/:id
+curl http://localhost:3000/transaction/:txHash
 ```

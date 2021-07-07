@@ -46,10 +46,12 @@ func insertDB(ctx context.Context, client *ethclient.Client, db *gorm.DB, chainI
 	defer wg.Done()
 	retry := 5
 	for i := startBLock; i <= endBlock; i++ {
+		// TODO: Here would fail with server graceful down
 		block, err := client.BlockByNumber(ctx, big.NewInt(int64(i)))
 		if err != nil {
 			fmt.Printf("get block failed, retry = %v, block number us %v, err is %v\n", retry, i, err)
 			for retry > 0 {
+				time.Sleep(30000 * time.Millisecond) // 30 sec
 				retry--
 				i--
 				continue
@@ -96,7 +98,7 @@ func insertDB(ctx context.Context, client *ethclient.Client, db *gorm.DB, chainI
 }
 
 func main() {
-	start := time.Now()
+	// start := time.Now()
 	numWindow := 1000
 	maxBlockNum := 10000
 
@@ -134,11 +136,19 @@ func main() {
 	// if err != nil {
 	// 	fmt.Println(err)
 	// }
-	for i := 0; i < int(maxBlockNum); i += numWindow {
-		go insertDB(ctx, client, db, chainId, i, i+numWindow-1)
-		wg.Add(1)
+	initialCount := 0
+	for {
+		if initialCount < maxBlockNum {
+			for i := initialCount; i < int(maxBlockNum); i += numWindow {
+				go insertDB(ctx, client, db, chainId, i, i+numWindow-1)
+				wg.Add(1)
+			}
+			wg.Wait()
+			initialCount += maxBlockNum
+		}
+		// elapsed := time.Since(start)
+		// fmt.Printf("Run time took %s\n", elapsed)
+		fmt.Printf("Scan done, Got %v blocks", initialCount)
+		time.Sleep(3000 * time.Millisecond)
 	}
-	wg.Wait()
-	elapsed := time.Since(start)
-	fmt.Printf("Run time took %s\n", elapsed)
 }
